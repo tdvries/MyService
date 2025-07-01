@@ -20,7 +20,7 @@ public class LogService {
 	}
 	
     private static void writeLog(String message) {
-        try (FileWriter fw = new FileWriter("C:\\Logs\\Truston\\MyService\\service.log", true)) {
+        try (FileWriter fw = new FileWriter("C:\\Logs\\Truston\\MyService\\service1.log", true)) {
             fw.write(message + "\n");
         } catch (IOException e) {
             e.printStackTrace();
