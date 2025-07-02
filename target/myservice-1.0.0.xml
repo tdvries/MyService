@@ -1,0 +1,11 @@
+<service>
+  <id>myservice</id>
+  <name>My Service</name>
+  <description>Runs a Java JAR as a Windows Service using WinSW</description>
+
+  <executable>"C:\Program Files\Java\jdk1.8.0_202\bin\java.exe"</executable>
+  <arguments>-jar myservice-1.0.0.jar</arguments>
+
+  <logpath>logs</logpath>
+  <log mode="roll" />
+</service>
