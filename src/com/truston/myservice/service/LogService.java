@@ -1,29 +1,51 @@
 package com.truston.myservice.service;
 
-import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.nio.file.*;
+import java.util.logging.*;
 
 public class LogService {
 
-	public static void main(String[] args) {
-		while (true) {
-            writeLog("Service is running at " + LocalDateTime.now());
+
+    private static final Logger logger = Logger.getLogger(LogService.class.getName());
+    private static boolean running = true;
+
+    public static void main(String[] args) {
+        setupLogger();
+        logger.info("Service started.");
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            logger.info("Service shutting down.");
+            running = false;
+        }));
+
+        while (running) {
             try {
-                // Sleep for 60 seconds
-                Thread.sleep(60 * 1000);
+                logger.info("Service is running...");
+                Thread.sleep(10_000); // Log every 10 seconds
             } catch (InterruptedException e) {
-                writeLog("Service interrupted: " + e.getMessage());
-                break;
+                logger.warning("Service interrupted: " + e.getMessage());
             }
         }
-	}
-	
-    private static void writeLog(String message) {
-        try (FileWriter fw = new FileWriter("C:\\Logs\\Truston\\MyService\\service2.log", true)) {
-            fw.write(message + "\n");
+
+        logger.info("Service stopped.");
+    }
+
+    private static void setupLogger() {
+        try {
+            Path logDir = Paths.get("c:/logs/truston/myservice");
+            if (!Files.exists(logDir)) {
+                Files.createDirectory(logDir);
+            }
+
+            FileHandler fh = new FileHandler("c:/logs/truston/myservice/service.log", true);
+            fh.setFormatter(new SimpleFormatter());
+            logger.addHandler(fh);
+            logger.setLevel(Level.INFO);
+            logger.setUseParentHandlers(false); // Don't log to console
+
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Failed to setup logger: " + e.getMessage());
         }
     }
 }
